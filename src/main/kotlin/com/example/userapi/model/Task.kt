@@ -15,3 +15,5 @@ data class Task(
 enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
 }
+
+data class CreateTaskRequest(val title: String, val description: String)
