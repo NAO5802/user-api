@@ -8,5 +8,6 @@ class TaskRepository {
     private val tasks = mutableListOf<Task>()
 
     fun findAll(userId: Long): List<Task> = tasks.filter { it.userId == userId }
+    fun findById(taskId: Long): Task? = tasks.firstOrNull { it.id == taskId }
 
 }
