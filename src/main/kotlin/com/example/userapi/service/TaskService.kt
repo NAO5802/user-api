@@ -3,6 +3,7 @@ package com.example.userapi.service
 import com.example.userapi.exception.AccessDeniedException
 import com.example.userapi.exception.TaskNotFoundException
 import com.example.userapi.exception.UserNotFoundException
+import com.example.userapi.model.CreateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.repository.TaskRepository
 import org.springframework.stereotype.Service
@@ -27,5 +28,9 @@ class TaskService(
     }
 
 
+    fun createTask(userId: Long, request: CreateTaskRequest): Task {
+            userService.getUserById(userId) ?: throw UserNotFoundException("ユーザーが存在しません")
+            return taskRepository.save(userId, request.title, request.description)
+    }
 
 }
