@@ -27,5 +27,3 @@ class GlobalExceptionHandler {
     fun handleAccessDenied(e: AccessDeniedException): ResponseEntity<String> =
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
 }
-
-data class FieldError(val field: String, val message: String?)
