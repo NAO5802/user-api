@@ -1,5 +1,8 @@
 package com.example.userapi.model
 
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+
 data class User(
     val id: Long,
     val name: String,
@@ -7,6 +10,6 @@ data class User(
 )
 
 data class CreateUserRequest(
-    val name: String,
-    val email: String
+    @field:NotBlank val name: String,
+    @field:NotBlank @field:Email val email: String
 )

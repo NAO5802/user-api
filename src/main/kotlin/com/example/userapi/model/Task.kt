@@ -1,5 +1,6 @@
 package com.example.userapi.model
 
+import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
 data class Task(
@@ -16,5 +17,9 @@ enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
 }
 
-data class CreateTaskRequest(val title: String, val description: String)
+data class CreateTaskRequest(
+    @field:NotBlank val title: String,
+    @field:NotBlank val description: String
+)
+
 data class UpdateTaskRequest(val title: String?, val description: String?, val status: TaskStatus?)
