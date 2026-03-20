@@ -45,5 +45,12 @@ class TaskService(
         return taskRepository.update(updated)
     }
 
+    fun deleteTask(userId: Long, taskId: Long): Unit {
+        userService.findByIdOrThrow(userId)
+        val found = taskRepository.findById(taskId) ?: throw TaskNotFoundException("タスクが存在しません")
+        if(found.userId != userId) throw AccessDeniedException("アクセス権限がありません")
+        taskRepository.delete(taskId)
+    }
+
 
 }

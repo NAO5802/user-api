@@ -37,4 +37,9 @@ class TaskRepository {
         tasks[index] = updated
         return updated
     }
+
+    fun delete(taskId: Long): Unit {
+        val isRemoved = tasks.removeIf { it.id == taskId }
+        if(!isRemoved) throw TaskNotFoundException("タスクが存在しません")
+    }
 }

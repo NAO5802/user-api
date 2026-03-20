@@ -9,6 +9,7 @@ import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.service.TaskService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -36,6 +37,10 @@ class TaskController(private val taskService: TaskService) {
     @PutMapping("/{taskId}")
     fun updateTask(@PathVariable userId: Long, @PathVariable taskId: Long, @RequestBody request: UpdateTaskRequest): ResponseEntity<Task> =
         taskService.updateTask(userId, taskId, request).let { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/{taskId}")
+    fun deleteTask(@PathVariable userId: Long, @PathVariable taskId: Long): ResponseEntity<Unit> =
+        taskService.deleteTask(userId, taskId).let { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
 
     // TODO: UserControllerの例外とともに専用クラスに切り出す
     @ExceptionHandler(UserNotFoundException::class)
