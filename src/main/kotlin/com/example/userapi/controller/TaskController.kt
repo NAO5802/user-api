@@ -2,6 +2,7 @@ package com.example.userapi.controller
 
 import com.example.userapi.model.CreateTaskRequest
 import com.example.userapi.model.Task
+import com.example.userapi.model.TaskFilter
 import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.service.TaskService
 import jakarta.validation.Valid
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.*
 class TaskController(private val taskService: TaskService) {
 
     @GetMapping
-    fun getTasks(@PathVariable userId: Long): List<Task> = taskService.getTasks(userId)
+    fun getTasks(@PathVariable userId: Long, @RequestParam(required = false) title: String?, @RequestParam(required = false) status: String?): List<Task> {
+        return TaskFilter.of(title,status)
+            .let { filter -> taskService.getTasks(userId, filter) }
+    }
 
     @GetMapping("/{taskId}")
     fun getTaskById(@PathVariable userId: Long ,@PathVariable taskId: Long): ResponseEntity<Task> =

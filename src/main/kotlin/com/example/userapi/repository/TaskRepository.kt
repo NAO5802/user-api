@@ -2,6 +2,7 @@ package com.example.userapi.repository
 
 import com.example.userapi.exception.TaskNotFoundException
 import com.example.userapi.model.Task
+import com.example.userapi.model.TaskFilter
 import com.example.userapi.model.TaskStatus
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -13,7 +14,15 @@ class TaskRepository {
     private val tasks = mutableListOf<Task>()
     private val idCounter = AtomicLong(1)
 
-    fun findAll(userId: Long): List<Task> = tasks.filter { it.userId == userId }
+    fun findAll(userId: Long, filter: TaskFilter): List<Task> =
+        tasks.filter { task ->
+            val isValidUser = task.userId == userId
+            val isContainsTitle = filter.title?.let{ task.title.contains(it)}?: true
+            val matchesStatus = filter.status?.let { task.status == it }?: true
+
+            isValidUser && isContainsTitle && matchesStatus
+        }
+
     fun findById(taskId: Long): Task? = tasks.firstOrNull { it.id == taskId }
 
     fun save(userId: Long, title: String, description: String): Task {

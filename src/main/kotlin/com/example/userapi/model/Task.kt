@@ -10,8 +10,7 @@ data class Task(
     val description: String,
     val status: TaskStatus,
     val createdAt: LocalDateTime
-) {
-}
+)
 
 enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
@@ -23,3 +22,18 @@ data class CreateTaskRequest(
 )
 
 data class UpdateTaskRequest(val title: String?, val description: String?, val status: TaskStatus?)
+
+@ConsistentCopyVisibility
+data class TaskFilter private constructor(val title: String?, val status: TaskStatus?) {
+    companion object {
+        fun of(title: String?, status: String?) =
+            TaskFilter(
+                title,
+                status?.let{
+                    TaskStatus.entries.find { entry -> entry.name == it  }
+                        ?: throw IllegalArgumentException("不正なステータスです")
+                }
+            )
+
+    }
+}

@@ -4,6 +4,7 @@ import com.example.userapi.exception.AccessDeniedException
 import com.example.userapi.exception.TaskNotFoundException
 import com.example.userapi.model.CreateTaskRequest
 import com.example.userapi.model.Task
+import com.example.userapi.model.TaskFilter
 import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.repository.TaskRepository
 import org.springframework.stereotype.Service
@@ -15,10 +16,9 @@ class TaskService(
     private val userService: UserService
 ) {
 
-    fun getTasks(userId: Long): List<Task> =
+    fun getTasks(userId: Long, filter: TaskFilter): List<Task> =
         userService.getUserById(userId)
-        .let { user -> taskRepository.findAll(user.id) }
-
+        .let { user -> taskRepository.findAll(user.id, filter) }
 
     fun getTaskById(userId: Long, taskId: Long): Task {
         userService.getUserById(userId)

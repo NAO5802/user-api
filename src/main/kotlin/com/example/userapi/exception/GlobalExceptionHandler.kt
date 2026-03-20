@@ -15,6 +15,10 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("errors" to errors))
     }
 
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgument(e: IllegalArgumentException): ResponseEntity<String> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+
     @ExceptionHandler(UserNotFoundException::class)
     fun handleUserNotFound(e: UserNotFoundException): ResponseEntity<String> =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
