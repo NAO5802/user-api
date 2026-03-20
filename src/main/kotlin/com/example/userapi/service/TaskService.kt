@@ -16,24 +16,24 @@ class TaskService(
 ) {
 
     fun getTasks(userId: Long): List<Task> =
-        userService.findByIdOrThrow(userId)
+        userService.getUserById(userId)
         .let { user -> taskRepository.findAll(user.id) }
 
 
     fun getTaskById(userId: Long, taskId: Long): Task {
-        userService.findByIdOrThrow(userId)
+        userService.getUserById(userId)
         val task = taskRepository.findById(taskId) ?: throw TaskNotFoundException("タスクが存在しません")
             if(task.userId != userId) throw AccessDeniedException("アクセス権限がありません")
             return task
     }
 
     fun createTask(userId: Long, request: CreateTaskRequest): Task {
-        userService.findByIdOrThrow(userId)
+        userService.getUserById(userId)
         return taskRepository.save(userId, request.title, request.description)
     }
 
     fun updateTask(userId: Long, taskId: Long, request: UpdateTaskRequest): Task {
-        userService.findByIdOrThrow(userId)
+        userService.getUserById(userId)
         val found = taskRepository.findById(taskId) ?: throw TaskNotFoundException("タスクが存在しません")
         if(found.userId != userId) throw AccessDeniedException("アクセス権限がありません")
 
@@ -46,7 +46,7 @@ class TaskService(
     }
 
     fun deleteTask(userId: Long, taskId: Long): Unit {
-        userService.findByIdOrThrow(userId)
+        userService.getUserById(userId)
         val found = taskRepository.findById(taskId) ?: throw TaskNotFoundException("タスクが存在しません")
         if(found.userId != userId) throw AccessDeniedException("アクセス権限がありません")
         taskRepository.delete(taskId)
