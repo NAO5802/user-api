@@ -1,5 +1,6 @@
 package com.example.userapi.repository
 
+import com.example.userapi.exception.TaskNotFoundException
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskStatus
 import org.springframework.stereotype.Repository
@@ -28,5 +29,12 @@ class TaskRepository {
 
         tasks.add(newTask)
         return newTask
+    }
+
+    fun update(updated: Task): Task {
+        val index = tasks.indexOfFirst { it.id == updated.id }
+        if(index == -1) throw TaskNotFoundException("タスクが存在しません")
+        tasks[index] = updated
+        return updated
     }
 }

@@ -17,3 +17,4 @@ enum class TaskStatus {
 }
 
 data class CreateTaskRequest(val title: String, val description: String)
+data class UpdateTaskRequest(val title: String?, val description: String?, val status: TaskStatus?)
