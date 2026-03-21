@@ -1,15 +1,15 @@
 package com.example.userapi.service
 
-import com.example.userapi.model.NewUser
+import com.example.userapi.model.CreateUserRequest
 import com.example.userapi.model.User
 import com.example.userapi.repository.UserEntity
 
 object UserMapper {
 
-    fun toEntity(newUser: NewUser): UserEntity =
+    fun toEntity(request: CreateUserRequest): UserEntity =
         UserEntity(
-            name = newUser.name,
-            email = newUser.email
+            name = request.name,
+            email = request.email
         )
 
     fun toEntity(user: User): UserEntity =

@@ -9,11 +9,6 @@ data class User(
     val email: String
 )
 
-data class NewUser(
-    val name: String,
-    val email: String
-)
-
 data class CreateUserRequest(
     @field:NotBlank val name: String,
     @field:NotBlank @field:Email val email: String
