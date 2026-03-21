@@ -12,6 +12,13 @@ data class Task(
     val createdAt: LocalDateTime
 )
 
+data class NewTask(
+    val userId: Long,
+    val title: String,
+    val description: String,
+    val status: TaskStatus,
+)
+
 enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
 }
