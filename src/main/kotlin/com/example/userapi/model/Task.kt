@@ -1,5 +1,6 @@
 package com.example.userapi.model
 
+import com.example.userapi.repository.TaskEntity
 import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
@@ -12,12 +13,15 @@ data class Task(
     val createdAt: LocalDateTime
 )
 
-data class NewTask(
-    val userId: Long,
-    val title: String,
-    val description: String,
-    val status: TaskStatus,
-)
+fun Task.toEntity(): TaskEntity =
+    TaskEntity(
+        id = this.id,
+        userId = this.userId,
+        title = this.title,
+        description = this.description,
+        status = this.status,
+        createdAt = this.createdAt
+    )
 
 enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
@@ -27,6 +31,14 @@ data class CreateTaskRequest(
     @field:NotBlank val title: String,
     @field:NotBlank val description: String
 )
+
+fun CreateTaskRequest.toEntity(userId: Long): TaskEntity =
+    TaskEntity(
+        userId = userId,
+        title = this.title,
+        description = this.description,
+        status = TaskStatus.TODO,
+    )
 
 data class UpdateTaskRequest(val title: String?, val description: String?, val status: TaskStatus?)
 

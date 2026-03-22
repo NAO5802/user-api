@@ -1,5 +1,6 @@
 package com.example.userapi.repository
 
+import com.example.userapi.model.Task
 import com.example.userapi.model.TaskStatus
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -31,3 +32,13 @@ class TaskEntity (
     @CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),
 )
+
+fun TaskEntity.toDomain(): Task =
+    Task(
+        id = this.id,
+        userId = this.userId,
+        title = this.title,
+        description = this.description,
+        status = this.status,
+        createdAt = this.createdAt
+    )
