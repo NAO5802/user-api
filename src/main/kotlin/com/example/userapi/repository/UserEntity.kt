@@ -1,5 +1,6 @@
 package com.example.userapi.repository
 
+import com.example.userapi.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -20,3 +21,10 @@ class UserEntity (
     @Column(nullable = false)
     val email: String
 )
+
+fun UserEntity.toDomain(): User =
+    User(
+        id = this.id,
+        name = this.name,
+        email = this.email
+    )
