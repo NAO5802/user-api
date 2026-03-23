@@ -20,9 +20,8 @@ class TaskService(
 
     fun getTasks(userId: Long, filter: TaskFilter): List<Task> =
         userService.getUserById(userId)
-            .let{emptyList()}
-    //  TODO
-//        .let { user -> taskRepository.findAll(user.id, filter) }
+            .let{user -> taskRepository.findAllWithFilter(user.id, filter.title, filter.status)}
+            .map { it.toDomain() }
 
     fun getTaskById(userId: Long, taskId: Long): Task {
         userService.getUserById(userId)

@@ -1,5 +1,6 @@
 package com.example.userapi.exception
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<Any> {
@@ -30,4 +33,9 @@ class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException::class)
     fun handleAccessDenied(e: AccessDeniedException): ResponseEntity<String> =
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
+
+    @ExceptionHandler(Exception::class)
+    fun handleException(e: Exception){
+        logger.error("Unexpected error", e)
+    }
 }
