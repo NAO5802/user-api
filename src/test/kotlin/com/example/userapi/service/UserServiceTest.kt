@@ -16,20 +16,37 @@ class UserServiceTest {
     private val userRepository: UserRepository = mock()
     private val userService = UserService(userRepository)
 
-    private val userEntity = UserEntity(1L, "Alice", "alice@example.com")
+    private val entityOfUser1 = UserEntity(1L, "Alice", "alice@example.com")
+    private val entityOfUser2 = UserEntity(2L, "Bob", "bob@example.com")
+    private val user1 = User(1L, "Alice", "alice@example.com")
+    private val user2 = User(2L, "Bob", "bob@example.com")
 
     @Test
-    fun getAllUsers() {
+    fun `getAllUsers_ユーザーが存在する時、全てのユーザーを返す`() {
+        whenever(userRepository.findAll()).thenReturn(listOf(entityOfUser1, entityOfUser2))
+
+        val actual = userService.getAllUsers()
+
+        assertEquals(listOf(user1, user2), actual)
+    }
+
+    @Test
+    fun `getAllUsers_ユーザーが存在しない時、空配列を返す`() {
+        whenever(userRepository.findAll()).thenReturn(emptyList<UserEntity>())
+
+        val actual = userService.getAllUsers()
+
+        assertEquals(emptyList<User>(), actual)
+
     }
 
     @Test
     fun `getUserById_ユーザーが存在する時、ユーザーを返す`() {
-        whenever(userRepository.findById(1L)).thenReturn(Optional.of(userEntity))
+        whenever(userRepository.findById(1L)).thenReturn(Optional.of(entityOfUser1))
 
         val actual = userService.getUserById(1L)
 
-        val expected = User(1L, "Alice", "alice@example.com")
-        assertEquals(expected, actual)
+        assertEquals(user1, actual)
     }
 
     @Test
