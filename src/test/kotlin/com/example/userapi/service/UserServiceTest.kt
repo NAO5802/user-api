@@ -13,6 +13,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Optional
 
+@Suppress("NonAsciiCharacters")
 class UserServiceTest {
 
     private val userRepository: UserRepository = mock()

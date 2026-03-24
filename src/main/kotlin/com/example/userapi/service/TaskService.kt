@@ -53,7 +53,7 @@ class TaskService(
         return taskRepository.save(updated.toEntity()).toDomain()
     }
 
-    fun deleteTask(userId: Long, taskId: Long): Unit {
+    fun deleteTask(userId: Long, taskId: Long) {
         userService.getUserById(userId)
         val found = taskRepository.findById(taskId)
             .orElseThrow{ TaskNotFoundException("タスクが存在しません") }
