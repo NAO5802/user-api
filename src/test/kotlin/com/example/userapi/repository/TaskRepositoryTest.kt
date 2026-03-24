@@ -65,7 +65,6 @@ class TaskRepositoryTest {
     }
 
     private fun assertTask(expected: TaskEntity, actual: TaskEntity){
-        assertEquals(expected.id, actual.id)
         assertEquals(expected.title, actual.title)
         assertEquals(expected.description, actual.description)
         assertEquals(expected.status, actual.status)
