@@ -43,7 +43,7 @@ class TaskServiceTest {
     val task4 = Task(id = 13L, userId = 1L, title = "New task", description = "it's new", status = TaskStatus.TODO, createdAt = LocalDateTime.of(2026,3,25,11,45))
 
     @Test
-    fun `getTasks_指定したユーザーとフィルタに合致するすべてのタスクを返す`() {
+    fun `getTasks 指定したユーザーとフィルタに合致するすべてのタスクを返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findAllWithFilter(1L, "Shopping", TaskStatus.TODO))
             .thenReturn(listOf(taskEntity1,taskEntity2))
@@ -54,7 +54,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `getTaskById_指定したIDのタスクを返す`() {
+    fun `getTaskById 指定したIDのタスクを返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(10L)).thenReturn(Optional.of(taskEntity1))
 
@@ -64,7 +64,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `getTaskById_指定したIDのタスクが存在しない場合、例外を返す`() {
+    fun `getTaskById 指定したIDのタスクが存在しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(999L)).thenReturn(Optional.empty())
 
@@ -72,7 +72,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `getTaskById_指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
+    fun `getTaskById 指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(12L)).thenReturn(Optional.of(taskEntity3))
 
@@ -80,7 +80,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `createTask_作成したタスクを返す`() {
+    fun `createTask 作成したタスクを返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.save(any())).thenReturn(taskEntity4)
 
@@ -90,7 +90,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `updateTask_更新したタスクを返す`() {
+    fun `updateTask 更新したタスクを返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(10L)).thenReturn(Optional.of(taskEntity1))
         whenever(taskRepository.save(any())).thenReturn(updatedTaskEntity1)
@@ -101,7 +101,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `updateTask_指定したIDのタスクが存在しない場合、例外を返す`() {
+    fun `updateTask 指定したIDのタスクが存在しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(999L)).thenReturn(Optional.empty())
 
@@ -109,7 +109,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `updateTask__指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
+    fun `updateTask 指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(12L)).thenReturn(Optional.of(taskEntity3))
 
@@ -117,7 +117,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `deleteTask_削除に成功した場合、何も返さない`() {
+    fun `deleteTask 削除に成功した場合、何も返さない`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(10L)).thenReturn(Optional.of(taskEntity1))
         doNothing().whenever(taskRepository).delete(any())
@@ -128,7 +128,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `deleteTask_指定したIDのタスクが存在しない場合、例外を返す`() {
+    fun `deleteTask 指定したIDのタスクが存在しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(999L)).thenReturn(Optional.empty())
 
@@ -136,7 +136,7 @@ class TaskServiceTest {
     }
 
     @Test
-    fun `deleteTask__指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
+    fun `deleteTask 指定したユーザーIDがタスクのものと合致しない場合、例外を返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
         whenever(taskRepository.findById(12L)).thenReturn(Optional.of(taskEntity3))
 

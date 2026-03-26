@@ -7,7 +7,6 @@ import com.example.userapi.repository.UserEntity
 import com.example.userapi.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.hamcrest.Matchers.hasSize
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
