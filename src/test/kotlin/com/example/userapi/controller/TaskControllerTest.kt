@@ -32,18 +32,24 @@ class TaskControllerTest {
     lateinit var taskRepository: TaskRepository
 
     private var user1Id: Long = 0
+    private var user2Id: Long = 0
     private var task1Id: Long = 0
     private var task2Id: Long = 0
+    private var user2Task1Id: Long = 0
 
     @BeforeEach
     fun setUp() {
         val user1 = userRepository.save(UserEntity(name = "Alice", email = "alice@example.com"))
         user1Id = user1.id
+        val user2 = userRepository.save(UserEntity(name = "Bob", email = "bob@example.com"))
+        user2Id = user2.id
 
         val task1 = taskRepository.save(TaskEntity(userId = user1Id, title = "Shopping", description = "go shopping", status = TaskStatus.TODO))
         task1Id = task1.id
         val task2 = taskRepository.save(TaskEntity(userId = user1Id, title = "Training", description = "go training", status = TaskStatus.TODO))
         task2Id = task2.id
+        val user2Task1 = taskRepository.save(TaskEntity(userId = user2Id, title = "Bob's task", description = "bob's task", status = TaskStatus.TODO))
+        user2Task1Id = user2Task1.id
     }
 
     @Test
@@ -69,8 +75,30 @@ class TaskControllerTest {
     }
 
     @Test
-    fun getTaskById() {
+    fun `GET getTaskById_指定したIDのタスクを返す`() {
+        mockMvc.perform(get("/users/$user1Id/tasks/$task1Id"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.title").value("Shopping"))
     }
+
+    @Test
+    fun `GET getTaskById_不正なユーザーを指定した場合、404を返す`() {
+        mockMvc.perform(get("/users/99999/tasks/$task1Id"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `GET getTaskById_指定したIDのタスクが存在しない場合、404を返す`() {
+        mockMvc.perform(get("/users/$user1Id/tasks/99999"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `GET getTaskById_指定したユーザーのIDがタスクのものと一致しない場合、403を返す`() {
+        mockMvc.perform(get("/users/$user1Id/tasks/$user2Task1Id"))
+            .andExpect(status().isForbidden)
+    }
+
 
     @Test
     fun createTask() {
