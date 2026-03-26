@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -101,7 +103,25 @@ class TaskControllerTest {
 
 
     @Test
-    fun createTask() {
+    fun `POST createTask_作成したタスクを返す`() {
+        mockMvc.perform(
+            post("/users/$user1Id/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"title":"New Task","description":"new task description"}""")
+        )
+            .andExpect(status().isCreated)
+            .andExpect(jsonPath("$.title").value("New Task"))
+            .andExpect(jsonPath("$.status").value("TODO"))
+    }
+
+    @Test
+    fun `POST createTask_不正なユーザーを指定した場合、404を返す`() {
+        mockMvc.perform(
+            post("/users/99999/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"title":"New Task","description":"new task description"}""")
+        )
+            .andExpect(status().isNotFound)
     }
 
     @Test
