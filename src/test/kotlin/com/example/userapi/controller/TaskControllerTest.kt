@@ -12,12 +12,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -169,7 +166,27 @@ class TaskControllerTest {
     }
 
     @Test
-    fun deleteTask() {
+    fun `DELETE deleteTask_タスクの削除に成功したら204を返す`() {
+        mockMvc.perform(delete("/users/$user1Id/tasks/$task1Id"))
+            .andExpect(status().isNoContent)
+    }
+
+    @Test
+    fun `DELETE deleteTask_不正なユーザーを指定した場合、404を返す`() {
+        mockMvc.perform(delete("/users/99999/tasks/$task1Id"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `DELETE deleteTask_指定したIDのタスクが存在しない場合、404を返す`() {
+        mockMvc.perform(delete("/users/$user1Id/tasks/99999"))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `DELETE deleteTask_指定したユーザーのIDがタスクのものと一致しない場合、403を返す`() {
+        mockMvc.perform(delete("/users/$user1Id/tasks/$user2Task1Id"))
+            .andExpect(status().isForbidden)
     }
 
 }
