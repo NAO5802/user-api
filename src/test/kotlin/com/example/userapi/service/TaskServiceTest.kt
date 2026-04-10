@@ -52,10 +52,10 @@ class TaskServiceTest {
         whenever(taskRepository.findAllWithFilter(1L, "Shopping", TaskStatus.TODO, pageable))
             .thenReturn(PageImpl(listOf(taskEntity1, taskEntity2)))
 
-        val actual = taskService.getTasks(1L, TaskFilter.of("Shopping", "TODO"))
+        val actual = taskService.getTasks(1L, TaskFilter.of("Shopping", "TODO"), pageable)
 
         // TODO: pageに対応したassertionに変更
-        assertEquals(listOf(task1, task2), actual)
+        assertEquals(listOf(task1, task2), actual.content)
     }
 
     @Test

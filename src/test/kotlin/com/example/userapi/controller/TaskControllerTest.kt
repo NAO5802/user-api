@@ -57,9 +57,9 @@ class TaskControllerTest {
     fun `GET getTasks_指定した条件に合致するタスク一覧を返す`() {
         mockMvc.perform(get("/users/$user1Id/tasks?title=ing&status=TODO"))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$", hasSize<Any>(2)))
-            .andExpect(jsonPath("$[0].title").value("Shopping"))
-            .andExpect(jsonPath("$[1].title").value("Training"))
+            .andExpect(jsonPath("$.content", hasSize<Any>(2)))
+            .andExpect(jsonPath("$.content[0].title").value("Shopping"))
+            .andExpect(jsonPath("$.content[1].title").value("Training"))
     }
 
     @Test

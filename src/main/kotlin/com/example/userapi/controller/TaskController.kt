@@ -1,11 +1,13 @@
 package com.example.userapi.controller
 
 import com.example.userapi.dto.CreateTaskRequest
+import com.example.userapi.dto.PagedResponse
 import com.example.userapi.dto.UpdateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskFilter
 import com.example.userapi.service.TaskService
 import jakarta.validation.Valid
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,9 +17,10 @@ import org.springframework.web.bind.annotation.*
 class TaskController(private val taskService: TaskService) {
 
     @GetMapping
-    fun getTasks(@PathVariable userId: Long, @RequestParam(required = false) title: String?, @RequestParam(required = false) status: String?): List<Task> {
+    fun getTasks(@PathVariable userId: Long, @RequestParam(required = false) title: String?, @RequestParam(required = false) status: String?): PagedResponse {
+        // TODO: pageableうけとる
         return TaskFilter.of(title,status)
-            .let { filter -> taskService.getTasks(userId, filter) }
+            .let { filter -> taskService.getTasks(userId, filter, PageRequest.of(0,10)) }
     }
 
     @GetMapping("/{taskId}")

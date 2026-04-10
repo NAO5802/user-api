@@ -4,7 +4,7 @@ import com.example.userapi.model.Task
 
 data class PagedResponse(
     val content: List<Task>,
-    val totalElements: Int,
+    val totalElements: Long,
     val totalPages: Int,
     val currentPage: Int,
     val hasNext: Boolean,

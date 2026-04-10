@@ -1,6 +1,7 @@
 package com.example.userapi.service
 
 import com.example.userapi.dto.CreateTaskRequest
+import com.example.userapi.dto.PagedResponse
 import com.example.userapi.dto.UpdateTaskRequest
 import com.example.userapi.dto.toEntity
 import com.example.userapi.exception.AccessDeniedException
@@ -11,6 +12,7 @@ import com.example.userapi.model.toEntity
 import com.example.userapi.repository.TaskRepository
 import com.example.userapi.repository.toDomain
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 
@@ -19,12 +21,18 @@ class TaskService(
     private val taskRepository: TaskRepository,
     private val userService: UserService
 ) {
-
-    fun getTasks(userId: Long, filter: TaskFilter): List<Task> =
-        // TODO: pagerequestの差し替え
+// TODO: PagedResponse<Task>としたい
+    fun getTasks(userId: Long, filter: TaskFilter, pageable: Pageable): PagedResponse =
         userService.getUserById(userId)
-            .let{user -> taskRepository.findAllWithFilter(user.id, filter.title, filter.status, PageRequest.of(0,10))}.content
-            .map { it.toDomain() }
+            .let{user -> taskRepository.findAllWithFilter(user.id, filter.title, filter.status, pageable)}
+            .let { page -> PagedResponse(
+                content = page.content.map { it.toDomain() },
+                totalElements = page.totalElements,
+                totalPages = page.totalPages,
+                currentPage = page.number,
+                hasNext = page.hasNext(),
+                hasPrevious =  page.hasPrevious()
+            ) }
 
     fun getTaskById(userId: Long, taskId: Long): Task {
         userService.getUserById(userId)
