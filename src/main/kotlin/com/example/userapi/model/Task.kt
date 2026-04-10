@@ -1,7 +1,6 @@
 package com.example.userapi.model
 
 import com.example.userapi.repository.TaskEntity
-import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
 data class Task(
