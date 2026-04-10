@@ -19,6 +19,8 @@ import org.mockito.kotlin.doNothing
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import java.time.LocalDateTime
 import java.util.*
 
@@ -28,6 +30,8 @@ class TaskServiceTest {
     private val taskRepository : TaskRepository = mock()
     private val userService: UserService = mock()
     private val taskService = TaskService(taskRepository, userService)
+
+    val pageable = PageRequest.of(0, 10)
 
     val user1 = User(1L, "Alice", "alice@example.com")
 
@@ -45,11 +49,12 @@ class TaskServiceTest {
     @Test
     fun `getTasks 指定したユーザーとフィルタに合致するすべてのタスクを返す`() {
         whenever(userService.getUserById(1L)).thenReturn(user1)
-        whenever(taskRepository.findAllWithFilter(1L, "Shopping", TaskStatus.TODO))
-            .thenReturn(listOf(taskEntity1,taskEntity2))
+        whenever(taskRepository.findAllWithFilter(1L, "Shopping", TaskStatus.TODO, pageable))
+            .thenReturn(PageImpl(listOf(taskEntity1, taskEntity2)))
 
         val actual = taskService.getTasks(1L, TaskFilter.of("Shopping", "TODO"))
 
+        // TODO: pageに対応したassertionに変更
         assertEquals(listOf(task1, task2), actual)
     }
 

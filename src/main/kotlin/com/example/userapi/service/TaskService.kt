@@ -9,6 +9,7 @@ import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.model.toEntity
 import com.example.userapi.repository.TaskRepository
 import com.example.userapi.repository.toDomain
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 
@@ -19,8 +20,9 @@ class TaskService(
 ) {
 
     fun getTasks(userId: Long, filter: TaskFilter): List<Task> =
+        // TODO: pagerequestの差し替え
         userService.getUserById(userId)
-            .let{user -> taskRepository.findAllWithFilter(user.id, filter.title, filter.status)}
+            .let{user -> taskRepository.findAllWithFilter(user.id, filter.title, filter.status, PageRequest.of(0,10))}.content
             .map { it.toDomain() }
 
     fun getTaskById(userId: Long, taskId: Long): Task {

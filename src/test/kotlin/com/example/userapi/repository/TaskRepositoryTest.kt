@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.data.domain.PageRequest
 
 @Suppress("NonAsciiCharacters")
 @DataJpaTest
@@ -18,6 +19,7 @@ class TaskRepositoryTest {
     private val user1Task2 = TaskEntity(userId = 1L, title = "Alice's task 2", description = "description", status = TaskStatus.DONE)
     private val user1Task3 = TaskEntity(userId = 1L, title = "Alice's task 10", description = "description", status = TaskStatus.DONE)
     private val user2Task1 = TaskEntity(userId = 2L, title = "Bob's task 1", description = "description", status = TaskStatus.TODO)
+    private val pageable = PageRequest.of(0, 10)
 
     @BeforeEach
     fun setUp() {
@@ -29,40 +31,42 @@ class TaskRepositoryTest {
 
     @Test
     fun `findAllWithFilter_フィルタを指定しない場合、対象ユーザーのタスクを全て取得する`() {
-        val actual = repository.findAllWithFilter(userId = 1L , title = null, status = null)
+        val actual = repository.findAllWithFilter(userId = 1L , title = null, status = null, pageable)
 
-        assertEquals(3, actual.size)
-        assertTask(user1Task1, actual[0])
-        assertTask(user1Task2, actual[1])
-        assertTask(user1Task3, actual[2])
+        assertEquals(3, actual.content.size)
+        assertTask(user1Task1, actual.content[0])
+        assertTask(user1Task2, actual.content[1])
+        assertTask(user1Task3, actual.content[2])
     }
 
     @Test
     fun `findAllWithFilter_タイトルを指定した場合、対象ユーザーのタスクのうちタイトルが部分一致するものを全て取得する`() {
-        val actual = repository.findAllWithFilter(userId = 1L, title = "Alice's task 1", status = null)
+        val actual = repository.findAllWithFilter(userId = 1L, title = "Alice's task 1", status = null, pageable)
 
-        assertEquals(2, actual.size)
-        assertTask(user1Task1, actual[0])
-        assertTask(user1Task3, actual[1])
+        assertEquals(2, actual.content.size)
+        assertTask(user1Task1, actual.content[0])
+        assertTask(user1Task3, actual.content[1])
 
     }
 
     @Test
     fun `findAllWithFilter_ステータスを指定した場合、対象ユーザーのタスクのうちステータスが一致するものを全て取得する`() {
-        val actual = repository.findAllWithFilter(userId = 1L, title = null, status = TaskStatus.DONE)
+        val actual = repository.findAllWithFilter(userId = 1L, title = null, status = TaskStatus.DONE, pageable)
 
-        assertEquals(2, actual.size)
-        assertTask(user1Task2, actual[0])
-        assertTask(user1Task3, actual[1])
+        assertEquals(2, actual.content.size)
+        assertTask(user1Task2, actual.content[0])
+        assertTask(user1Task3, actual.content[1])
     }
 
     @Test
     fun `findAllWithFilter_タイトルとステータスを指定した場合、対象ユーザーのタスクのうち両方の条件に一致するものを全て取得する`() {
-        val actual = repository.findAllWithFilter(userId = 1L, title = "Alice's task 1", status = TaskStatus.DONE)
+        val actual = repository.findAllWithFilter(userId = 1L, title = "Alice's task 1", status = TaskStatus.DONE, pageable)
 
-        assertEquals(1, actual.size)
-        assertTask(user1Task3, actual[0])
+        assertEquals(1, actual.content.size)
+        assertTask(user1Task3, actual.content[0])
     }
+
+    // TODO: pageに関するテスト
 
     private fun assertTask(expected: TaskEntity, actual: TaskEntity){
         assertEquals(expected.title, actual.title)
