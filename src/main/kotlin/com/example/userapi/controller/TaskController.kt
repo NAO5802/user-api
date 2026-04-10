@@ -1,9 +1,9 @@
 package com.example.userapi.controller
 
-import com.example.userapi.model.CreateTaskRequest
+import com.example.userapi.dto.CreateTaskRequest
+import com.example.userapi.dto.UpdateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskFilter
-import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.service.TaskService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus

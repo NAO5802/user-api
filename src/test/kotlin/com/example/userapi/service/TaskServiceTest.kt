@@ -1,12 +1,12 @@
 package com.example.userapi.service
 
+import com.example.userapi.dto.CreateTaskRequest
+import com.example.userapi.dto.UpdateTaskRequest
 import com.example.userapi.exception.AccessDeniedException
 import com.example.userapi.exception.TaskNotFoundException
-import com.example.userapi.model.CreateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskFilter
 import com.example.userapi.model.TaskStatus
-import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.model.User
 import com.example.userapi.repository.TaskEntity
 import com.example.userapi.repository.TaskRepository
@@ -100,7 +100,9 @@ class TaskServiceTest {
         whenever(taskRepository.findById(10L)).thenReturn(Optional.of(taskEntity1))
         whenever(taskRepository.save(any())).thenReturn(updatedTaskEntity1)
 
-        val actual = taskService.updateTask(1L, 10L, UpdateTaskRequest(title = "My Shopping", description = "let's go my Shopping",  status = TaskStatus.DONE))
+        val actual = taskService.updateTask(1L, 10L,
+            UpdateTaskRequest(title = "My Shopping", description = "let's go my Shopping", status = TaskStatus.DONE)
+        )
 
         assertEquals(updatedTask1, actual)
     }

@@ -27,20 +27,7 @@ enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
 }
 
-data class CreateTaskRequest(
-    @field:NotBlank val title: String,
-    @field:NotBlank val description: String
-)
 
-fun CreateTaskRequest.toEntity(userId: Long): TaskEntity =
-    TaskEntity(
-        userId = userId,
-        title = this.title,
-        description = this.description,
-        status = TaskStatus.TODO,
-    )
-
-data class UpdateTaskRequest(val title: String?, val description: String?, val status: TaskStatus?)
 
 @ConsistentCopyVisibility
 data class TaskFilter private constructor(val title: String?, val status: TaskStatus?) {

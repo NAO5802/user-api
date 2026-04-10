@@ -1,11 +1,12 @@
 package com.example.userapi.service
 
+import com.example.userapi.dto.CreateTaskRequest
+import com.example.userapi.dto.UpdateTaskRequest
+import com.example.userapi.dto.toEntity
 import com.example.userapi.exception.AccessDeniedException
 import com.example.userapi.exception.TaskNotFoundException
-import com.example.userapi.model.CreateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskFilter
-import com.example.userapi.model.UpdateTaskRequest
 import com.example.userapi.model.toEntity
 import com.example.userapi.repository.TaskRepository
 import com.example.userapi.repository.toDomain
