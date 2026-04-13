@@ -6,6 +6,7 @@ import com.example.userapi.dto.UpdateTaskRequest
 import com.example.userapi.model.Task
 import com.example.userapi.model.TaskFilter
 import com.example.userapi.service.TaskService
+import com.example.userapi.util.sortFromString
 import jakarta.validation.Valid
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -17,10 +18,20 @@ import org.springframework.web.bind.annotation.*
 class TaskController(private val taskService: TaskService) {
 
     @GetMapping
-    fun getTasks(@PathVariable userId: Long, @RequestParam(required = false) title: String?, @RequestParam(required = false) status: String?): PagedResponse {
-        // TODO: pageableうけとる
-        return TaskFilter.of(title,status)
-            .let { filter -> taskService.getTasks(userId, filter, PageRequest.of(0,10)) }
+    fun getTasks(
+        @PathVariable userId: Long,
+        @RequestParam(required = false) title: String?,
+        @RequestParam(required = false) status: String?,
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "createdAt") sortBy: String,
+        @RequestParam(defaultValue = "desc") sortDir: String
+        ): PagedResponse {
+        val filter = TaskFilter.of(title, status)
+        val sort = sortFromString(sortBy, sortDir)
+        val pageRequest = PageRequest.of(pageNumber, size, sort)
+
+        return taskService.getTasks(userId, filter, pageRequest)
     }
 
     @GetMapping("/{taskId}")

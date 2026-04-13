@@ -26,7 +26,17 @@ enum class TaskStatus {
     TODO, IN_PROGRESS, DONE
 }
 
+enum class TaskSortKey(val label: String) {
+    TITLE("title"),
+    CREATED_AT("createdAt"),
+    STATUS("status");
 
+    companion object {
+        fun fromString(value: String): TaskSortKey =
+            entries.find{ it.label == value }
+                ?: throw IllegalArgumentException("Unknown task sort key: $value")
+    }
+}
 
 @ConsistentCopyVisibility
 data class TaskFilter private constructor(val title: String?, val status: TaskStatus?) {

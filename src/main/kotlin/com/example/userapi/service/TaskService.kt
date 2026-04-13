@@ -11,7 +11,6 @@ import com.example.userapi.model.TaskFilter
 import com.example.userapi.model.toEntity
 import com.example.userapi.repository.TaskRepository
 import com.example.userapi.repository.toDomain
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
