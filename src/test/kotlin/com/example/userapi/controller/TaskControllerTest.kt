@@ -58,8 +58,8 @@ class TaskControllerTest {
         mockMvc.perform(get("/users/$user1Id/tasks?title=ing&status=TODO"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.content", hasSize<Any>(2)))
-            .andExpect(jsonPath("$.content[0].title").value("Shopping"))
-            .andExpect(jsonPath("$.content[1].title").value("Training"))
+            .andExpect(jsonPath("$.content[0].title").value("Training"))
+            .andExpect(jsonPath("$.content[1].title").value("Shopping"))
     }
 
     @Test
