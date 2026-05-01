@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
 
 @Suppress("NonAsciiCharacters")
 @SpringBootTest
@@ -45,21 +46,37 @@ class TaskControllerTest {
         val user2 = userRepository.save(UserEntity(name = "Bob", email = "bob@example.com"))
         user2Id = user2.id
 
-        val task1 = taskRepository.save(TaskEntity(userId = user1Id, title = "Shopping", description = "go shopping", status = TaskStatus.TODO))
+        val task1 = taskRepository.save(TaskEntity(userId = user1Id, title = "Shopping", description = "go shopping", status = TaskStatus.TODO, createdAt = LocalDateTime.of(2026,4,30,14,0)))
         task1Id = task1.id
-        val task2 = taskRepository.save(TaskEntity(userId = user1Id, title = "Training", description = "go training", status = TaskStatus.TODO))
+        val task2 = taskRepository.save(TaskEntity(userId = user1Id, title = "Training", description = "go training", status = TaskStatus.TODO, createdAt = LocalDateTime.of(2026,5,1,14,0)))
         task2Id = task2.id
+        val task3 = taskRepository.save(TaskEntity(userId = user1Id, title = "Cooking", description = "go cooking", status = TaskStatus.IN_PROGRESS, createdAt = LocalDateTime.of(2026,5,2,14,0)))
         val user2Task1 = taskRepository.save(TaskEntity(userId = user2Id, title = "Bob's task", description = "bob's task", status = TaskStatus.TODO))
         user2Task1Id = user2Task1.id
     }
 
     @Test
-    fun `GET getTasks_指定した条件に合致するタスク一覧を返す`() {
+    fun `GET getTasks_指定したタイトル・ステータスに合致するタスク一覧を返す`() {
         mockMvc.perform(get("/users/$user1Id/tasks?title=ing&status=TODO"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.content", hasSize<Any>(2)))
             .andExpect(jsonPath("$.content[0].title").value("Training"))
             .andExpect(jsonPath("$.content[1].title").value("Shopping"))
+            .andExpect(jsonPath("$.totalElements").value(2))
+            .andExpect(jsonPath("$.totalPages").value(1))
+            .andExpect(jsonPath("$.currentPage").value(0))
+            .andExpect(jsonPath("$.hasNext").value(false))
+            .andExpect(jsonPath("$.hasPrevious").value(false))
+    }
+
+    @Test
+    fun `GET getTasks_指定したソート順でタスク一覧を返す`(){
+        mockMvc.perform(get("/users/$user1Id/tasks?sortBy=title&sortDir=asc"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.content", hasSize<Any>(3)))
+            .andExpect(jsonPath("$.content[0].title").value("Cooking"))
+            .andExpect(jsonPath("$.content[1].title").value("Shopping"))
+            .andExpect(jsonPath("$.content[2].title").value("Training"))
     }
 
     @Test
@@ -73,6 +90,18 @@ class TaskControllerTest {
         val invalidUserId = 99999
         mockMvc.perform(get("/users/$invalidUserId/tasks?title=ing&status=TODO"))
             .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `getTasks_不正なソート項目を指定した場合、400を返す`(){
+        mockMvc.perform(get("/users/$user1Id/tasks?sortBy=INVALID"))
+            .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    fun `getTasks_不正なソート順を指定した場合、400を返す`(){
+        mockMvc.perform(get("/users/$user1Id/tasks?sortDir=INVALID"))
+            .andExpect(status().isBadRequest)
     }
 
     @Test
