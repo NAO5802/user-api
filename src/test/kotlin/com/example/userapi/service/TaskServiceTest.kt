@@ -31,7 +31,7 @@ class TaskServiceTest {
     private val userService: UserService = mock()
     private val taskService = TaskService(taskRepository, userService)
 
-    val pageable = PageRequest.of(0, 10)
+    val pageable: PageRequest = PageRequest.of(0, 10)
 
     val user1 = User(1L, "Alice", "alice@example.com")
 
@@ -54,7 +54,6 @@ class TaskServiceTest {
 
         val actual = taskService.getTasks(1L, TaskFilter.of("Shopping", "TODO"), pageable)
 
-        // TODO: pageに対応したassertionに変更
         assertEquals(listOf(task1, task2), actual.content)
     }
 
